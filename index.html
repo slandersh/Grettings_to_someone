@@ -328,32 +328,47 @@
         <button onclick="addComment()">Send</button>
         <div class="comments-container" id="commentsContainer"></div>
     </div>
+      <script>
+          // Password protection
+          function checkPassword() {
+              const password = document.getElementById('passwordInput').value.trim();
+              const overlay = document.getElementById('passwordOverlay');
+              const lockIcon = overlay.querySelector('.lock-animation');
 
-    <script>
-        // Password protection
-        function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            const overlay = document.getElementById('passwordOverlay');
-            const lockIcon = overlay.querySelector('.lock-animation');
+              if (password.toLowerCase() === "makasih") {
+                  lockIcon.textContent = '🔓';
+                  overlay.style.animation = 'fadeOut 1s forwards';
+                  setTimeout(() => {
+                      overlay.style.display = 'none';
+                      createConfetti();
+                  }, 1000);
+              } else {
+                  alert("Incorrect password! Please try again.");
+                  lockIcon.textContent = '🔒';
+                  lockIcon.style.animation = 'none';
+                  setTimeout(() => {
+                      lockIcon.style.animation = 'lockShake 0.5s ease-in-out';
+                  }, 10);
+                  document.getElementById('passwordInput').value = '';
+              }
+          }
 
-            if (password === "makasih") {
-                lockIcon.textContent = '🔓';
-                overlay.style.animation = 'fadeOut 1s forwards';
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                    createConfetti();
-                }, 1000);
-            } else {
-                lockIcon.textContent = '🔒';
-                lockIcon.style.animation = 'none';
-                setTimeout(() => {
-                    lockIcon.style.animation = 'lockShake 0.5s ease-in-out';
-                }, 10);
-            }
-        }
+          function showFarewellMessage() {
+              const message = "Thank you for visiting! Would you like to leave a message for the author?";
+              if (confirm(message)) {
+                  document.querySelector('.comment-section').style.display = 'block';
+                  document.querySelector('.comment-section').scrollIntoView({ behavior: 'smooth' });
+              }
+          }
 
-        // Enhanced confetti animation
-        function createConfetti() {
+          // Add this to the prevPage function
+          function prevPage() {
+              document.getElementById("bookContainer").classList.remove("flipped");
+              showFarewellMessage();
+          }
+
+          // Enhanced confetti animation
+          function createConfetti() {
             for(let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');

@@ -210,3 +210,29 @@
     from { opacity: 1; }
     to { opacity: 0; visibility: hidden; }
 }
+
+// Add dynamic elements
+function addDecorations() {
+    // Add clouds
+    for(let i = 0; i < 3; i++) {
+        const cloud = document.createElement('div');
+        cloud.className = 'cloud';
+        cloud.style.top = `${Math.random() * 50}%`;
+        cloud.style.animationDelay = `${i * 3}s`;
+        document.body.appendChild(cloud);
+    }
+    
+    // Add cute animals
+    const animals = ['🦊', '🐰', '🐼', '🐨'];
+    animals.forEach((animal, i) => {
+        const div = document.createElement('div');
+        div.className = 'animal';
+        div.textContent = animal;
+        div.style.left = `${i * 25}%`;
+        div.style.bottom = '20px';
+        document.body.appendChild(div);
+    });
+}
+
+// Call this when page loads
+document.addEventListener('DOMContentLoaded', addDecorations);

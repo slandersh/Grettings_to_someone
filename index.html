@@ -430,10 +430,23 @@
             createConfetti();
         }
         
-        function
-    prevPage() {
+        function prevPage() {
             document.getElementById("bookContainer").classList.remove("flipped");
+            showFarewellMessage();
         }
+
+        // Add event listeners to ensure buttons are clickable
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password button
+            document.querySelector('.password-overlay button').addEventListener('click', checkPassword);
+            
+            // Card buttons
+            document.querySelector('.page.front button').addEventListener('click', nextPage);
+            document.querySelector('.page.back button').addEventListener('click', prevPage);
+            
+            // Comment button
+            document.querySelector('.comment-section button').addEventListener('click', addComment);
+        });
     </script>
 
 @keyframes fadeOut {

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Mahasiswa</title>
+</head>
+<body bgcolor="black" text="white" link="white" vlink="white" alink="white">
+    <center>
+        <header>
+            <h1><u>Form Pendaftaran Mahasiswa</u></h1>
+            <hr width="80%">
+        </header>
+        
+        <main>
+            <form>
+                <table width="80%" cellpadding="10">
+                    <tr>
+                        <td width="30%"><label for="username"><b>Username:</b></label></td>
+                        <td><input type="text" id="username" name="username" size="40" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="email"><b>Email:</b></label></td>
+                        <td><input type="email" id="email" name="email" size="40" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password"><b>Password:</b></label></td>
+                        <td><input type="password" id="password" name="password" size="40" required></td>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan="2">
+                            <fieldset>
+                                <legend>Jenis Kelamin</legend>
+                                <input type="radio" id="Laki-laki" name="gender" value="Laki-laki" required>
+                                <label for="Laki-laki">Laki-laki</label>
+                                <input type="radio" id="perempuan" name="gender" value="perempuan">
+                                <label for="perempuan">Perempuan</label>
+                            </fieldset>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <fieldset>
+                                <legend>Jurusan</legend>
+                                <select id="jurusan" name="jurusan" required>
+                                    <option value="">Pilih Jurusan</option>
+                                    <option value="PGSD">PGSD</option>
+                                    <option value="PGPAUD">PGPAUD</option>
+                                    <option value="PPM">PPM</option>
+                                    <option value="RPL">RPL</option>
+                                    <option value="TEKKOM">TEKKOM</option>
+                                </select>
+                            </fieldset>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><label for="alamat"><b>Alamat:</b></label></td>
+                        <td><textarea id="alamat" name="alamat" rows="4" cols="38" required></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><label for="upload"><b>Upload:</b></label></td>
+                        <td><input type="file" name="upload" id="upload"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="dob"><b>Tanggal Lahir:</b></label></td>
+                        <td><input type="date" id="dob" name="dob" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="color"><b>Pilih Warna:</b></label></td>
+                        <td><input type="color" id="color" name="color"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="score"><b>Penilaian:</b></label></td>
+                        <td>
+                            <input type="range" id="score" name="score" min="0" max="100" value="0">
+                            <span id="scoreValue">0%</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" align="center">
+                            <button type="submit">submit</button>
+                            <button type="reset">reset</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <br>
+            <br>
+            <figure>
+                <img src="https://cdn0-production-images-kly.akamaized.net/-sVCR6E9oF6C1qFO2s9fh0R0L-Q=/800x450/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4498324/original/098662100_1689058578-fedswww.jpg" alt="gambar" width="40%">
+                <figcaption><i>Ilustrasi Mahasiswa</i></figcaption>
+            </figure>
+        </main>
+        
+        <footer>
+            <hr width="80%">
+            <p><b>© 2023 Universitas Contoh</b></p>
+        </footer>
+    </center>
+
+<script>
+    const scoreSlider = document.getElementById('score');
+    const scoreValue = document.getElementById('scoreValue');
+    
+    scoreSlider.oninput = function() {
+        scoreValue.textContent = this.value + '%';
+    }
+</script>
+</body>
+</html>

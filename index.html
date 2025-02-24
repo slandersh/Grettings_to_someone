@@ -283,19 +283,19 @@
         /* Comment section styles */
         .comment-section {
             position: relative;
-            width: 100%;
-            max-width: 300px;
-            margin: 20px auto;
+            width: 90%;
+            max-width: 50%;
+            margin: 2% auto;
             background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            padding: 2%;
+            border-radius: 2%;
+            box-shadow: 0 1% 3% rgba(0,0,0,0.2);
         }
 
         .comments-container {
-            max-height: 200px;
+            max-height: 50%;
             overflow-y: auto;
-            margin: 10px 0;
+            margin: 2% 0;
         }
 
         @media (max-width: 768px) {
@@ -306,9 +306,65 @@
 
         .comment {
             background: #f0f0f0;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 10px;
+            padding: 2%;
+            margin: 1% 0;
+            border-radius: 2%;
+            position: relative;
+        }
+
+        .reaction-bar {
+            display: flex;
+            gap: 2%;
+            margin-top: 1%;
+        }
+
+        .reaction-button {
+            padding: 1% 2%;
+            border: none;
+            border-radius: 25%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .reaction-count {
+            margin-left: 1%;
+            font-size: 90%;
+        }            
+        .comment-section {
+            position: relative;
+            width: 90%;
+            max-width: 50%;
+            margin: 2% auto;
+            background: white;
+            padding: 2%;
+            border-radius: 2%;
+            box-shadow: 0 1% 3% rgba(0,0,0,0.2);
+        }
+
+        .comments-container {
+            max-height: 50%;
+            overflow-y: auto;
+            margin: 2% 0;
+        }
+
+        @media (max-width: 768px) {
+            .book-container {
+                aspect-ratio: 1/1;
+            }
+        }
+
+        .comment {
+            background: #f0f0f0;
+            padding: 2%;
+            margin: 1% 0;
+            border-radius: 2%;
+            position: relative;
+        }
+
+        .reaction-bar {
+            display: flex;
+            gap: 2%;
+            margin-top: 1%;
         }
     </style>
 </head>
@@ -345,51 +401,51 @@
     <!-- Add comment section at the end -->
     <div class="comment-section">
         <h3>Leave a Message</h3>
-        <button onclick="document.getElementById('adminOverlay').style.display='flex'">Admin Login</button>
         <textarea id="commentInput" placeholder="Write your message..."></textarea>
         <button onclick="addComment()">Send</button>
         <div class="comments-container" id="commentsContainer"></div>
     </div>
-      <script>
-          // Password protection
-          document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-              if (e.key === 'Enter') {
-                  checkPassword();
-              }
-          });
+    <script>
+        // Password protection
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
 
-          function checkPassword() {
-              const password = document.getElementById('passwordInput').value.trim().toLowerCase();
-              const overlay = document.getElementById('passwordOverlay');
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value.trim().toLowerCase();
+            const overlay = document.getElementById('passwordOverlay');
 
-              if (password === "makasih") {
-                  alert("Welcome! Enjoy your special greeting card! ✨");
-                  overlay.style.display = 'none';
-              } else if (password === "slandersh") {
-                  isAdmin = true;
-                  alert("Welcome Admin! ✨");
-                  overlay.style.display = 'none';
-                  showAdminControls();
-              } else {
-                  alert("Hint: kalau bahasa indonesia nya 'thanks' 🤔");
-                  document.getElementById('passwordInput').value = '';
-              }
-          }
-          function showFarewellMessage() {  // Changed from showFarewallMessage
-              function showFarewellMessage() {  // Changed from showFarewallMessage
-                  const message = "Thank you for visiting! Would you like to leave a message for the author?";
-                  if (confirm(message)) {
-                      document.querySelector('.comment-section').style.display = 'block';
-                      document.querySelector('.comment-section').scrollIntoView({ behavior: 'smooth' });
-                  }
-                }
-              }          // Add this to the prevPage function
-          function prevPage() {
-              document.getElementById("bookContainer").classList.remove("flipped");
-              showFarewellMessage();
-          }
-          // Enhanced confetti animation
-          function createConfetti() {
+            if (password === "makasih") {
+                alert("Welcome! Enjoy your special greeting card! ✨");
+                overlay.style.display = 'none';
+            } else if (password === "slandersh") {
+                isAdmin = true;
+                alert("Welcome Admin! ✨");
+                overlay.style.display = 'none';
+                showAdminControls();
+            } else {
+                alert("Hint: kalau bahasa indonesia nya 'thanks' 🤔");
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function showFarewellMessage() {
+            const message = "Thank you for visiting! Would you like to leave a message for the author?";
+            if (confirm(message)) {
+                document.querySelector('.comment-section').style.display = 'block';
+                document.querySelector('.comment-section').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function prevPage() {
+            document.getElementById("bookContainer").classList.remove("flipped");
+            showFarewellMessage();
+        }
+
+        // Enhanced confetti animation
+        function createConfetti() {
             for(let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
@@ -441,39 +497,94 @@
             comment.remove();
         }
 
+        let reactionLimits = new Map(); // Track reaction counts per user
+
         function addReaction(button) {
             if (!isAdmin) return;
             const reactionCount = button.nextElementSibling;
             reactionCount.textContent = parseInt(reactionCount.textContent) + 1;
         }
 
-        // Modify the existing addComment function to include admin controls
         function addComment() {
             const commentInput = document.getElementById('commentInput');
             if (commentInput.value.trim() !== '') {
                 const comment = document.createElement('div');
                 comment.classList.add('comment');
-                comment.textContent = commentInput.value;
-                
-                if (isAdmin) {
-                    const adminControls = document.createElement('div');
-                    adminControls.className = 'admin-controls';
-                    adminControls.style.display = 'block';
-                    adminControls.innerHTML = `
-                        <button class="admin-button" onclick="deleteComment(this)">Delete</button>
-                        <button class="admin-button" onclick="addReaction(this)">👍</button>
-                        <span class="reaction-count">0</span>
-                    `;
-                    comment.appendChild(adminControls);
-                }
-                
+                comment.dataset.id = Date.now(); // Unique ID for tracking reactions
+      
+                const commentText = document.createElement('p');
+                commentText.textContent = commentInput.value;
+      
+                const reactionBar = document.createElement('div');
+                reactionBar.className = 'reaction-bar';
+                reactionBar.innerHTML = `
+                    <button onclick="react(this, '👍')" class="reaction-button">👍 <span class="count">0</span></button>
+                    <button onclick="react(this, '❤️')" class="reaction-button">❤️ <span class="count">0</span></button>
+                    <button onclick="react(this, '😊')" class="reaction-button">😊 <span class="count">0</span></button>
+                    <button onclick="reply(this)" class="reaction-button">↩️ Reply</button>
+                `;
+      
+                comment.appendChild(commentText);
+                comment.appendChild(reactionBar);
                 document.getElementById('commentsContainer').appendChild(comment);
-                
-                const comments = JSON.parse(localStorage.getItem('comments') || '[]');
-                comments.push(commentInput.value);
-                localStorage.setItem('comments', JSON.stringify(comments));
-                
+      
                 commentInput.value = '';
+            }
+        }
+
+        function react(button, emoji) {
+            const commentId = button.closest('.comment').dataset.id;
+            const key = `${commentId}-${emoji}`;
+  
+            if (!reactionLimits.has(key)) {
+                reactionLimits.set(key, 0);
+            }
+  
+            if (reactionLimits.get(key) < 1) { // Limit to 1 reaction per emoji per comment
+                const countSpan = button.querySelector('.count');
+                let count = parseInt(countSpan.textContent);
+                countSpan.textContent = count + 1;
+                reactionLimits.set(key, reactionLimits.get(key) + 1);
+      
+                // Visual feedback
+                button.style.transform = 'scale(1.2)';
+                setTimeout(() => button.style.transform = 'scale(1)', 200);
+            }
+        }
+
+        function reply(button) {
+            const comment = button.closest('.comment');
+            const replyContainer = document.createElement('div');
+            replyContainer.className = 'reply-container';
+            replyContainer.style.marginLeft = '5%';
+            replyContainer.innerHTML = `
+                <input type="text" placeholder="Write a reply..." style="width: 80%; padding: 1%;">
+                <button onclick="submitReply(this)" style="margin-left: 2%;">Send</button>
+            `;
+            comment.appendChild(replyContainer);
+        }
+
+        function submitReply(button) {
+            const replyContainer = button.parentElement;
+            const replyInput = replyContainer.querySelector('input');
+            const replyText = replyInput.value;
+
+            if (replyText.trim()) {
+                const replyElement = document.createElement('div');
+                replyElement.className = 'comment';
+                replyElement.dataset.id = Date.now();
+                replyElement.style.marginLeft = '5%';
+                replyElement.style.marginTop = '2%';
+                replyElement.innerHTML = `
+                    <p>${replyText}</p>
+                    <div class="reaction-bar">
+                        <button onclick="react(this, '👍')" class="reaction-button">👍 <span class="count">0</span></button>
+                        <button onclick="react(this, '❤️')" class="reaction-button">❤️ <span class="count">0</span></button>
+                    </div>
+                `;
+
+                replyContainer.parentElement.appendChild(replyElement);
+                replyContainer.remove();
             }
         }
 
@@ -500,15 +611,12 @@
             img.classList.add("stiker");
             stikerContainer.appendChild(img);
         });
-                  function nextPage() {
-                      document.getElementById("bookContainer").classList.add("flipped");
-                      createConfetti();
-                  }
-        
-                  function prevPage() {
-                      document.getElementById("bookContainer").classList.remove("flipped");
-                      showFarewallMessage();
-                  }
+
+        function nextPage() {
+            document.getElementById("bookContainer").classList.add("flipped");
+            createConfetti();
+        }
+
         // Add event listeners to ensure buttons are clickable
         document.addEventListener('DOMContentLoaded', function() {
             // Password button
@@ -522,7 +630,7 @@
             document.querySelector('.comment-section button').addEventListener('click', addComment);
         });
     </script>
-</head>
+</body>
     </body>
 </html>
 

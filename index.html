@@ -313,16 +313,12 @@
     </style>
 </head>
 <body>
-    <!-- Password Overlay -->
+    <!-- Replace the existing password overlays with this combined one -->
     <div class="password-overlay" id="passwordOverlay">
         <div class="lock-animation">🔒</div>
         <input type="password" class="password-input" id="passwordInput" placeholder="Enter password">
         <button onclick="checkPassword()">Unlock</button>
-    </div>
-    <div class="admin-overlay" id="adminOverlay">
-        <div class="lock-animation">👑</div>
-        <input type="password" class="password-input" id="adminInput" placeholder="Admin password">
-        <button onclick="checkAdminPassword()">Login as Admin</button>
+        <p style="color: white; margin-top: 10px;">Enter 'makasih' for user or 'slandersh' for admin</p>
     </div>
 
     <div class="book-container" id="bookContainer">
@@ -366,12 +362,17 @@
           function checkPassword() {
               const password = document.getElementById('passwordInput').value.trim().toLowerCase();
               const overlay = document.getElementById('passwordOverlay');
-    
+
               if (password === "makasih") {
                   alert("Welcome! Enjoy your special greeting card! ✨");
                   overlay.style.display = 'none';
+              } else if (password === "slandersh") {
+                  isAdmin = true;
+                  alert("Welcome Admin! ✨");
+                  overlay.style.display = 'none';
+                  showAdminControls();
               } else {
-                  alert("Hint: The password is the Indonesian word for 'thank you' 🤔");
+                  alert("Hint: Try 'makasih' or 'slandersh' 🤔");
                   document.getElementById('passwordInput').value = '';
               }
           }

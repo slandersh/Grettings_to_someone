@@ -366,6 +366,31 @@
             gap: 2%;
             margin-top: 1%;
         }
+        .admin-controls {
+            margin-top: 10px;
+            padding: 5px;
+            background: #f8f8f8;
+            border-radius: 5px;
+        }
+
+        .admin-response {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 5px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .admin-reply textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+
+
+        
     </style>
 </head>
 <body>
@@ -406,6 +431,11 @@
         <div class="comments-container" id="commentsContainer"></div>
     </div>
     <script>
+        // Add these variables at the start of the script section
+        let isAdmin = false;
+        let userReactionLimit = new Map(); // Track user reactions
+        let adminReactionLimit = new Map(); // Track admin reactions
+
         // Password protection
         document.getElementById('passwordInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -413,22 +443,97 @@
             }
         });
 
+        // Update the checkPassword function
         function checkPassword() {
             const password = document.getElementById('passwordInput').value.trim().toLowerCase();
             const overlay = document.getElementById('passwordOverlay');
 
             if (password === "makasih") {
-                alert("Welcome! Enjoy your special greeting card! ✨");
+                isAdmin = false;
+                alert("Welcome! You can comment and react to messages! ✨");
                 overlay.style.display = 'none';
             } else if (password === "slandersh") {
                 isAdmin = true;
-                alert("Welcome Admin! ✨");
+                alert("Welcome Admin! You have full control! ✨");
                 overlay.style.display = 'none';
-                showAdminControls();
+                enableAdminControls();
             } else {
                 alert("Hint: kalau bahasa indonesia nya 'thanks' 🤔");
                 document.getElementById('passwordInput').value = '';
             }
+        }
+
+        // Add these new functions
+        function enableAdminControls() {
+            const comments = document.querySelectorAll('.comment');
+            comments.forEach(comment => {
+                if (!comment.querySelector('.admin-controls')) {
+                    const adminPanel = document.createElement('div');
+                    adminPanel.className = 'admin-controls';
+                    adminPanel.innerHTML = `
+                        <button onclick="deleteComment(this)">Delete</button>
+                        <button onclick="adminReply(this)">Reply</button>
+                    `;
+                    comment.appendChild(adminPanel);
+                }
+            });
+        }
+
+        function react(button, emoji) {
+            if (isAdmin) return; // Admins cannot react
+            
+            const commentId = button.closest('.comment').dataset.id;
+            const userId = 'user-' + Date.now(); // Simple user identification
+            const reactionKey = `${commentId}-${userId}`;
+
+            if (!userReactionLimit.has(reactionKey)) {
+                userReactionLimit.set(reactionKey, 0);
+            }
+
+            if (userReactionLimit.get(reactionKey) < 3) { // Limit 3 reactions per user per comment
+                const countSpan = button.querySelector('.count');
+                countSpan.textContent = parseInt(countSpan.textContent) + 1;
+                userReactionLimit.set(reactionKey, userReactionLimit.get(reactionKey) + 1);
+            } else {
+                alert('You have reached the maximum reactions for this comment!');
+            }
+        }
+
+        function adminReply(button) {
+            if (!isAdmin) return;
+            
+            const comment = button.closest('.comment');
+            const replyBox = document.createElement('div');
+            replyBox.className = 'admin-reply';
+            replyBox.innerHTML = `
+                <textarea placeholder="Admin reply..."></textarea>
+                <button onclick="submitAdminReply(this)">Send Reply</button>
+            `;
+            comment.appendChild(replyBox);
+        }
+
+        function submitAdminReply(button) {
+            if (!isAdmin) return;
+            
+            const replyBox = button.parentElement;
+            const replyText = replyBox.querySelector('textarea').value;
+            
+            if (replyText.trim()) {
+                const replyElement = document.createElement('div');
+                replyElement.className = 'admin-response';
+                replyElement.innerHTML = `
+                    <p><strong>Admin:</strong> ${replyText}</p>
+                `;
+                replyBox.parentElement.appendChild(replyElement);
+                replyBox.remove();
+            }
+        }
+
+        function deleteComment(button) {
+            if (!isAdmin) return;
+            
+            const comment = button.closest('.comment');
+            comment.remove();
         }
 
         function showFarewellMessage() {
@@ -458,53 +563,6 @@
             }
         }
 
-        let isAdmin = false;
-
-        function checkAdminPassword() {
-            const adminPassword = document.getElementById('adminInput').value;
-            if (adminPassword === "slandersh") {
-                isAdmin = true;
-                document.getElementById('adminOverlay').style.display = 'none';
-                showAdminControls();
-                alert("Welcome Admin!");
-            } else {
-                alert("Invalid admin password");
-            }
-        }
-
-        function showAdminControls() {
-            const comments = document.querySelectorAll('.comment');
-            comments.forEach(comment => {
-                const adminControls = document.createElement('div');
-                adminControls.className = 'admin-controls';
-                adminControls.style.display = isAdmin ? 'block' : 'none';
-                adminControls.innerHTML = `
-                    <button class="admin-button" onclick="deleteComment(this)">Delete</button>
-                    <button class="admin-button" onclick="addReaction(this)">👍</button>
-                    <span class="reaction-count">0</span>
-                `;
-                comment.appendChild(adminControls);
-            });
-        }
-
-        function deleteComment(button) {
-            if (!isAdmin) return;
-            const comment = button.closest('.comment');
-            const comments = JSON.parse(localStorage.getItem('comments') || '[]');
-            const index = Array.from(comment.parentNode.children).indexOf(comment);
-            comments.splice(index, 1);
-            localStorage.setItem('comments', JSON.stringify(comments));
-            comment.remove();
-        }
-
-        let reactionLimits = new Map(); // Track reaction counts per user
-
-        function addReaction(button) {
-            if (!isAdmin) return;
-            const reactionCount = button.nextElementSibling;
-            reactionCount.textContent = parseInt(reactionCount.textContent) + 1;
-        }
-
         function addComment() {
             const commentInput = document.getElementById('commentInput');
             if (commentInput.value.trim() !== '') {
@@ -529,26 +587,6 @@
                 document.getElementById('commentsContainer').appendChild(comment);
       
                 commentInput.value = '';
-            }
-        }
-
-        function react(button, emoji) {
-            const commentId = button.closest('.comment').dataset.id;
-            const key = `${commentId}-${emoji}`;
-  
-            if (!reactionLimits.has(key)) {
-                reactionLimits.set(key, 0);
-            }
-  
-            if (reactionLimits.get(key) < 1) { // Limit to 1 reaction per emoji per comment
-                const countSpan = button.querySelector('.count');
-                let count = parseInt(countSpan.textContent);
-                countSpan.textContent = count + 1;
-                reactionLimits.set(key, reactionLimits.get(key) + 1);
-      
-                // Visual feedback
-                button.style.transform = 'scale(1.2)';
-                setTimeout(() => button.style.transform = 'scale(1)', 200);
             }
         }
 

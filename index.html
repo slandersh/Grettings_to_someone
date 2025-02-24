@@ -493,3 +493,16 @@
     resize: vertical;
     min-height: 80px;
 }
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; visibility: hidden; }
+}
+
+.fade-in {
+    animation: fadeIn 2s ease-in-out;
+}
+
+.fade-out {
+    animation: fadeOut 2s ease-in-out;
+}

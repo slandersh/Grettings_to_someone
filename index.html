@@ -282,20 +282,26 @@
 
         /* Comment section styles */
         .comment-section {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
             background: white;
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            max-width: 300px;
         }
 
         .comments-container {
             max-height: 200px;
             overflow-y: auto;
             margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .book-container {
+                aspect-ratio: 1/1;
+            }
         }
 
         .comment {
@@ -363,7 +369,8 @@
                   alert("Hint: The password is the Indonesian word for 'thank you' 🤔");
                   document.getElementById('passwordInput').value = '';
               }
-          }          function showFarewellMessage() {
+          }
+          function showFarewellMessage() {  // Changed from showFarewallMessage
               const message = "Thank you for visiting! Would you like to leave a message for the author?";
               if (confirm(message)) {
                   document.querySelector('.comment-section').style.display = 'block';
@@ -434,17 +441,15 @@
             img.classList.add("stiker");
             stikerContainer.appendChild(img);
         });
+                  function nextPage() {
+                      document.getElementById("bookContainer").classList.add("flipped");
+                      createConfetti();
+                  }
         
-        function nextPage() {
-            document.getElementById("bookContainer").classList.add("flipped");
-            createConfetti();
-        }
-        
-        function prevPage() {
-            document.getElementById("bookContainer").classList.remove("flipped");
-            showFarewellMessage();
-        }
-
+                  function prevPage() {
+                      document.getElementById("bookContainer").classList.remove("flipped");
+                      showFarewallMessage();
+                  }
         // Add event listeners to ensure buttons are clickable
         document.addEventListener('DOMContentLoaded', function() {
             // Password button
@@ -461,9 +466,30 @@
 
     @keyframes fadeOut {
         from { opacity: 1; }
-        to { opacity: 0; visibility: hidden; 
+        to { opacity: 0; visibility: hidden; }
     }
+    
+    .fade-in {
+        animation: fadeIn 2s ease-in-out;
+    }
+    
+    .fade-out {
+        animation: fadeOut 2s ease-in-out;
+    }
+    </body>
+</html>
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
-.fade-out {
-    animation: fadeOut 2s ease-in-out;
+
+.comment-section textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    resize: vertical;
+    min-height: 80px;
 }
